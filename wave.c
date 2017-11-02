@@ -142,7 +142,7 @@ void* waveHebra(void* id)
 	return NULL;
 }
 
-void wave(int T, int Hcant, int tSalida)
+void wave(int T, int Hcant, int tSalida, clock_t* T2000, clock_t* T4000, clock_t* T8000)
 {
 	printf("in\n");
 	int iteracion, i, j;
@@ -165,6 +165,21 @@ void wave(int T, int Hcant, int tSalida)
 		if(iteracion==tSalida)
 		{
 			copyMatrix(Hsalida,H,N);
+		}
+		if(iteracion==2000)
+		{
+			*T2000=clock();
+			printf("T2000: %li\n",*T2000);
+		}
+		if(iteracion==4000)
+		{
+			*T4000=clock();
+			printf("T4000: %li\n",*T4000);
+		}
+		if(iteracion==8000)
+		{
+			*T8000=clock();
+			printf("T8000: %li\n",*T8000);
 		}
 	}
 }
@@ -202,10 +217,10 @@ void printPosicionesHebra(int Hcant)
 	for (i = 0; i < Hcant; i++)
 	{
 		h = hebras[i];
-		//printf("Hebra: %d cant: %d\n", i, h.cantPosiciones);
+		printf("Hebra: %d cant: %d\n", i, h.cantPosiciones);
 		for (j = 0; j < h.cantPosiciones; j++)
 		{
-		//	printf("i:%d j:%d\n", h.escribir[j].i, h.escribir[j].j);
+			//printf("i:%d j:%d\n", h.escribir[j].i, h.escribir[j].j);
 			cont++;
 		}
 	}
@@ -335,18 +350,25 @@ int main(int argc, char **argv)
 	//printf("-----asignar-----\n");
 	asignarPosiciones(Hcant, posPorHebra, N);
 	//printf("-----printpos-----\n");
-	//printPosicionesHebra(Hcant);
+	printPosicionesHebra(Hcant);
 	//printf("-----wave-----\n");
-	clock_t start_t, end_t;
-	double total_t;
+	clock_t start_t, end_t, T2000, T4000, T8000;
+	double total_t,DT2000,DT4000,DT8000;
 
 	start_t =clock();
 	printf("Starting of the program, start_t = %ld\n", start_t);
-	wave(Tcant, Hcant, tSalida);
+	wave(Tcant, Hcant, tSalida,&T2000,&T4000,&T8000);
 	end_t=clock();
 	printf("End of the big loop, end_t = %ld\n", end_t);
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+	
+	DT2000 = (double)(T2000 - start_t) / CLOCKS_PER_SEC;
+	DT4000 = (double)(T4000 - start_t) / CLOCKS_PER_SEC;
+	DT8000 = (double)(T8000 - start_t) / CLOCKS_PER_SEC;
 	printf("Tiempo total: %f\n", total_t);
+	printf("T2000: %f\n", DT2000);
+	printf("T4000: %f\n", DT4000);
+	printf("T8000: %f\n", DT8000);
 	printf("CLOCK: %ld",CLOCKS_PER_SEC);
 
 	FILE* salida = fopen(fSalida, "wb");
@@ -360,7 +382,7 @@ int main(int argc, char **argv)
 	FILE* entrada = fopen(fSalida, "rb");
 	freadMatriz(Hprueba,entrada,N);
 	//schrodinger(H, H1, H0, N, Tcant);
-	printMatriz(Hsalida, N);
-	printMatriz(Hprueba, N);
+	//printMatriz(Hsalida, N);
+	//printMatriz(Hprueba, N);
 	
 }
