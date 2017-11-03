@@ -14,6 +14,10 @@ float** H;
 float** Hsalida;
 Hebra* hebras;
 
+/* Funcion que devuelve un puntero a matriz de float inicializada en 0
+   Entrada: Tamanio de la matriz cuadrada N
+   Salida: Doble puntero a float
+   */
 float** crearMatriz(int N)
 {
 	float** matriz = (float**) calloc(N, sizeof(float*));
@@ -35,6 +39,10 @@ float** crearMatriz(int N)
 	return matriz;
 }
 
+/* Funcion que dada una matriz y su tamanio, la muestra por pantalla
+   Entradas: Doble puntero a matriz, tamanio N de la matriz
+   Salidas: void
+   */
 void printMatriz(float** matriz, int N)
 {
 	printf("\n----- Matriz -----\n");
@@ -50,6 +58,10 @@ void printMatriz(float** matriz, int N)
 	printf("\n----- Fin Matriz -----\n");
 }
 
+/* Funcion que asigna los valores la matriz en el tiempo 0
+   Entrada: Matriz inicilizada, tamanio de la matriz N
+   Salida: void
+   */
 void iniciarMatriz0(float** H0, int N)
 {
 	float i, j;
@@ -65,6 +77,10 @@ void iniciarMatriz0(float** H0, int N)
 	}
 }
 
+/* Funcion que asigna los valores la matriz en el tiempo 1
+   Entrada: Matriz inicilizada, tamanio de la matriz N
+   Salida: void
+   */
 void iniciarMatriz1(float** H1, float** H0, int N)
 {
 	int i, j;
@@ -77,6 +93,10 @@ void iniciarMatriz1(float** H1, float** H0, int N)
 	}
 }
 
+/* Funcion que copia los valor de una matriz src a una matriz dest
+   Entrada: Matriz de destino, Matriz fuente, tamanio de las matrices
+   Salida: void
+   */ 
 void copyMatrix(float** dest, float** src, int N)
 {
 	int i, j;
@@ -89,6 +109,10 @@ void copyMatrix(float** dest, float** src, int N)
 	}
 }
 
+/* Ecuacion de schrodinger en una sola hebra
+   Entradas: Matriz de trabajo, Matriz en tiempo 0, Matriz en tiempo 1, Tamanio de las matrices, Iteracion de termino
+   Salida: void
+   */
 void schrodinger(float** H, float** H1, float** H0, int N, int final)
 {
 	int t, i, j;
@@ -107,6 +131,11 @@ void schrodinger(float** H, float** H1, float** H0, int N, int final)
 	}
 }
 
+/* Funcion en la que trabaja cada hebra, en esta cada hebra trabaja en la grilla en sus posiciones asignadas previamente.
+   Dado que las posiciones se asignan previamente, se asegura la exclusion mutua.
+   Entradas: Estructura que contiene datos de la hebra
+   Salidas: void
+   */
 void* waveHebra(void* id)
 {
 	Hebra* hilo = (Hebra*)id;
@@ -126,6 +155,10 @@ void* waveHebra(void* id)
 	return NULL;
 }
 
+/* Funcion que inicializa cada hebra para comenzar a trabajar en cada iteracion, luego se espera que cada hebra termine de trabajar
+   Entradas: Iteracion final, Cantidad de hebras, iteracion de salida
+   Salidas: void
+   */
 void wave(int T, int Hcant, int tSalida)
 {
 	printf("in\n");
@@ -153,6 +186,10 @@ void wave(int T, int Hcant, int tSalida)
 	}
 }
 
+/* Funcion que asigna las posiciones de la grilla que debe trabajar cada hebra
+   Entradas: Cantidad de hebras, posiciones por hebra, tamanio de la matriz
+   Salidas: void
+   */
 void asignarPosiciones(int Hcant, int posPorHebra, int N)
 {
 	int i, j, h, e;
@@ -178,6 +215,10 @@ void asignarPosiciones(int Hcant, int posPorHebra, int N)
 	hebras[h].cantPosiciones = e;
 }
 
+/* Funcion que muestra por pantalla las posiciones de cada hebra
+   Entradas: Cantidad de hebras
+   Salidas: void
+   */
 void printPosicionesHebra(int Hcant)
 {
 	int i, j, cont;
@@ -196,6 +237,10 @@ void printPosicionesHebra(int Hcant)
 	//printf("cont: %d\n", cont);
 }
 
+/* Funcion que inicializa el arreglo de estructura de hebras
+   Entrada: Cantidad de hebras, posiciones por hebra
+   Salidas: Arreglo de hebras
+   */
 Hebra* iniciarHebras(int Hcant, int posPorHebra)
 {
 	Hebra* h = (Hebra*)malloc(sizeof(Hebra) * Hcant);
