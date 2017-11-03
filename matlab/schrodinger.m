@@ -9,8 +9,8 @@ TF=1000;
 
 for i = 0.4*N:0.6*N
     for j = 0.4*N:0.6*N
-        A=floor(i)
-        B=floor(j)
+        A=round(i)
+        B=round(j)
         H0(A,B)=20;
     end
 end
