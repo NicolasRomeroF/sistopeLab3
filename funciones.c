@@ -146,7 +146,7 @@ void wave(int T, int Hcant, int tSalida)
 		//printf("copyMatrix\n");
 		copyMatrix(H0, H1, N);
 		copyMatrix(H1, H, N);
-		if(iteracion==tSalida)
+		if(iteracion==tSalida && tSalida>3)
 		{
 			copyMatrix(Hsalida,H,N);
 		}
@@ -253,8 +253,7 @@ int verificarEntradas(int N, int T, int H, int t)
 	}
 	if(t<3 || t>T)
 	{
-		printf("ERROR: t debe tener un valor mayor a 3 y ademas debe ser menor o igual a T\n");
-		return 0;
+		printf("ADVERTENCIA: t debe tener un valor mayor a 3 y ademas debe ser menor o igual a T.\n No se creara archivo de salida.\n");
 	}
 	return 1;
 }
